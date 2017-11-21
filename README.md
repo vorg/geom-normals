@@ -1,14 +1,14 @@
-# geom-merge
+# geom-normals
 
 Compute normals for the mesh based on faces/cells information
 
 ## Usage
 
 ```javascript
-var computeNormals = require('geom-normals')
+var normals = require('geom-normals')
 var cube = require('primitive-cube')()
 
-var normals = computeNormals(cube.positions, cube.cells)
+cube.normals = normals(cube.positions, cube.cells)
 ```
 
 ## API
