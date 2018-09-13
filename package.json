@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "pex-math": "git://github.com/variablestudio/pex-math"
+    "pex-math": "^3.0.0-0"
   }
 }
