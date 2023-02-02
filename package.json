@@ -1,6 +1,6 @@
 {
   "name": "geom-normals",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Compute normals for a simplicial complex geometry based on faces/cells information.",
   "keywords": [
     "geom",
@@ -25,10 +25,6 @@
   "exports": "./index.js",
   "main": "index.js",
   "types": "types/index.d.ts",
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
-  },
   "scripts": {
     "dev": "snowdev dev",
     "release": "snowdev release"
@@ -43,5 +39,9 @@
     "pex-gui": "^3.0.0-alpha.2",
     "primitive-geometry": "^2.9.1",
     "primitive-plane": "^2.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }
