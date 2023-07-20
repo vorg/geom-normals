@@ -1,6 +1,6 @@
 {
   "name": "geom-normals",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Compute normals for a simplicial complex geometry based on faces/cells information.",
   "keywords": [
     "geom",
