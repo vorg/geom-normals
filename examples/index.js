@@ -3,9 +3,11 @@ import { plane } from "primitive-geometry";
 import oldPlane from "primitive-plane";
 
 import createContext from "pex-context";
-import { avec3, mat4 } from "pex-math";
+import { avec3, vec3, mat4 } from "pex-math";
 import random from "pex-random";
 import createGUI from "pex-gui";
+
+random.seed(0);
 
 const basicVert = /* glsl */ `#version 300 es
 uniform mat4 uProjectionMatrix;
@@ -94,11 +96,17 @@ gui.addRadioList(
   "Mode",
   State,
   "mode",
-  State.shadings.map((name, value) => ({ name, value }))
+  State.shadings.map((name, value) => ({ name, value })),
 );
 
 const geometry = plane({ nx: 128, ny: 128 });
+// geometry.positions = Array.from(geometry.positions);
+// geometry.cells = Array.from(geometry.cells);
+
 // const geometry = oldPlane(1, 1, 128, 128);
+// geometry.positions = geometry.positions.flat();
+// geometry.normals = geometry.normals.flat();
+// // geometry.cells = geometry.cells.flat();
 
 const clearCmd = {
   pass: ctx.pass({
@@ -107,10 +115,10 @@ const clearCmd = {
   }),
 };
 
-const basePositions = geometry.positions;
-const baseNormals = geometry.normals;
-const noisePositions = basePositions.constructor.from(basePositions);
-let noiseNormals = baseNormals.constructor.from(baseNormals);
+const basePositions = structuredClone(geometry.positions);
+const baseNormals = structuredClone(geometry.normals);
+const noisePositions = structuredClone(basePositions);
+let noiseNormals = structuredClone(baseNormals);
 
 const positionsBuffer = ctx.vertexBuffer(geometry.positions);
 const normalsBuffer = ctx.vertexBuffer(geometry.normals);
@@ -132,7 +140,7 @@ const drawCmd = {
       Math.PI / 4,
       W / H,
       0.1,
-      100
+      100,
     ),
     uViewMatrix: mat4.lookAt(mat4.create(), [0, -0.9, 1], [0, 0, 0], [0, 1, 0]),
     uModelMatrix: mat4.create(),
@@ -144,31 +152,37 @@ let dt = 0;
 const frequency = 10;
 const amplitude = 0.1;
 
+const v = vec3.create();
+const n = vec3.create();
+
 ctx.frame(() => {
   if (!State.pause) dt += 0.005;
 
   // Update positions
-  const isTypedArray = !Array.isArray(basePositions);
+  const isFlatArray = !basePositions[0]?.length;
+  const l = basePositions.length / (isFlatArray ? 3 : 1);
 
-  for (let i = 0; i < basePositions.length / (isTypedArray ? 3 : 1); i++) {
-    const v = isTypedArray
-      ? basePositions.slice(i * 3, i * 3 + 3)
-      : basePositions[i];
-    const n = isTypedArray
-      ? baseNormals.slice(i * 3, i * 3 + 3)
-      : baseNormals[i];
+  for (let i = 0; i < l; i++) {
+    // Assuming base positions and normals are both either flat or not
+    if (isFlatArray) {
+      avec3.set(v, 0, basePositions, i);
+      avec3.set(n, 0, baseNormals, i);
+    } else {
+      vec3.set(v, basePositions[i]);
+      vec3.set(n, baseNormals[i]);
+    }
 
     const f =
       amplitude *
       random.noise3(v[0] * frequency, v[1] * frequency, v[2] * frequency + dt);
 
-    if (isTypedArray) {
+    if (isFlatArray) {
       avec3.set3(
         noisePositions,
         i,
         v[0] + n[0] * f,
         v[1] + n[1] * f,
-        v[2] + n[2] * f
+        v[2] + n[2] * f,
       );
     } else {
       noisePositions[i][0] = v[0] + n[0] * f;

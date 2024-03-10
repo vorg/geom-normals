@@ -5,13 +5,19 @@ const TEMP_1 = vec3.create();
 const TEMP_2 = vec3.create();
 
 function normals(positions, cells, normals) {
-  const isTypedArray = !Array.isArray(positions);
+  const isFlatArray = !positions[0]?.length;
+  const isCellsFlatArray = !cells[0]?.length;
+  const l = cells.length / (isCellsFlatArray ? 3 : 1);
 
-  if (isTypedArray) {
-    normals ||= new Float32Array(positions.length);
+  if (isFlatArray) {
+    normals ||= new positions.constructor(positions.length).fill(0);
 
-    for (let fi = 0; fi < cells.length / 3; fi++) {
-      avec3.set(TEMP_0, 0, cells, fi);
+    for (let fi = 0; fi < l; fi++) {
+      if (isCellsFlatArray) {
+        avec3.set(TEMP_0, 0, cells, fi);
+      } else {
+        vec3.set(TEMP_0, cells[fi]);
+      }
 
       avec3.set(TEMP_1, 0, positions, TEMP_0[1]); // b
       avec3.sub(TEMP_1, 0, positions, TEMP_0[0]); // ab = b - a
@@ -42,17 +48,22 @@ function normals(positions, cells, normals) {
 
   normals ||= [];
 
-  for (let fi = 0; fi < cells.length; fi++) {
-    const f = cells[fi];
-    const a = positions[f[0]];
+  for (let fi = 0; fi < l; fi++) {
+    if (isCellsFlatArray) {
+      avec3.set(TEMP_0, 0, cells, fi);
+    } else {
+      vec3.set(TEMP_0, cells[fi]);
+    }
 
-    vec3.normalize(vec3.sub(vec3.set(TEMP_1, positions[f[1]]), a));
-    vec3.normalize(vec3.sub(vec3.set(TEMP_2, positions[f[2]]), a));
-    vec3.normalize(vec3.cross(TEMP_1, TEMP_2));
+    const a = positions[TEMP_0[0]];
 
-    for (let i = 0; i < f.length; i++) {
-      normals[f[i]] ||= [0, 0, 0];
-      vec3.add(normals[f[i]], TEMP_1);
+    vec3.normalize(vec3.sub(vec3.set(TEMP_1, positions[TEMP_0[1]]), a)); // ab = b - a
+    vec3.normalize(vec3.sub(vec3.set(TEMP_2, positions[TEMP_0[2]]), a)); // ac = c - a
+    vec3.normalize(vec3.cross(TEMP_1, TEMP_2)); // ab x ac
+
+    for (let i = 0; i < 3; i++) {
+      normals[TEMP_0[i]] ||= [0, 0, 0];
+      vec3.add(normals[TEMP_0[i]], TEMP_1);
     }
   }
 
