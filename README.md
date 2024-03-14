@@ -31,13 +31,13 @@ normals(geometry.positions, geometry.cells, geometry.normals);
 
 **Parameters**
 
-- positions: `TypedArray|Array` – simplicial complex geometry positions (eg. `new Float32Array([x, y, z, x, y, z, ...])` or `new Array([x, y, z], [x, y, z], ...)`)
-- cells: `TypedArray|Array` – simplicial complex geometry cells (eg. `new Uint32Array([a, b, c, a, b, c, ...])` or `new Array([a, b, c], [a, b, c], ...)`)
-- out (optional): `TypedArray|Array` – simplicial complex geometry normals to write to (eg. `new Float32Array([x, y, z, x, y, z, ...])` or `new Array([x, y, z], [x, y, z], ...)`)
+- positions: `TypedArray | Array | Array<[x, y, z]>` – simplicial complex geometry positions (eg. `new Float32Array([x, y, z, x, y, z, ...])/new Array(x, y, z, x, y, z, ...)` or `new Array([x, y, z], [x, y, z], ...)`)
+- cells: `TypedArray | Array | Array<[x, y, z]>` – simplicial complex geometry cells (eg. `new Uint32Array([a, b, c, a, b, c, ...])/new Array(a, b, c, a, b, c, ...)` or `new Array([a, b, c], [a, b, c], ...)`)
+- out (optional): `TypedArray | Array | Array<[x, y, z]>` – simplicial complex geometry normals to write to (eg. `new Float32Array([x, y, z, x, y, z, ...])/new Array(x, y, z, x, y, z, ...)` or `new Array([x, y, z], [x, y, z], ...)`)
 
 **Returns**
 
-- normals: `TypedArray|Array` – The normals parameter array updated (or created) with per vertex computed normals.
+- normals: `TypedArray | Array | Array<[x, y, z]>` – The normals parameter array updated (or created) with per vertex computed normals.
 
 _Note: If there are two vertices with the same position but different index there will be discontinuity (hard edge)_
 
