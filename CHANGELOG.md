@@ -1,6 +1,15 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+# [2.1.0](https://github.com/vorg/geom-normals/compare/v2.0.1...v2.1.0) (2024-03-14)
+
+
+### Features
+
+* add support for flat arrays ([1ed5976](https://github.com/vorg/geom-normals/commit/1ed59768e98197efd2f9c7a332f7a069546c00d5))
+
+
 
 ## [2.0.1](https://github.com/vorg/geom-normals/compare/v2.0.0...v2.0.1) (2023-07-20)
 
